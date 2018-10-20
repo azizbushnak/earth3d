@@ -25,7 +25,7 @@ void setup() {
   stroke(0);
   strokeWeight(0);
   earth = createShape(SPHERE, radius);
-  earth_texture = loadImage("earth_flat_map.jpg");
+  earth_texture = loadImage("Albedo.jpg");
   earth.setTexture(earth_texture);  
   
   ArrayList<Element> elementList = GetMeteorElements();
@@ -36,29 +36,34 @@ void setup() {
 }
 
 void draw() {
-  background(0);
+ background(0);
 
-  box(0.2, 85, 0.2);
+ box(0.2, 85, 0.2);
 
-  fill(255,0,0);
-  shape(earth);
-  PVector c = get_latlong_xyz(40.7128, -74.0060);
-  translate(c.x, -c.z, c.y);
-  sphere(1);
-} 
+ fill(255,0,0);
+ shape(earth);
+   PVector c = get_latlong_xyz(40.7128, -74.0060); // New York
+ //  PVector c = get_latlong_xyz(50.7184, -3.5339); // Exeter
+ //  PVector c = get_latlong_xyz(0, 0); // Greenwich, Equator
+ //  PVector c = get_latlong_xyz(0, 90); // ~Singapore
+ //  PVector c = get_latlong_xyz(90, 0); // N Pole
+ //  PVector c = get_latlong_xyz(-90, 0); // S Pole
+ translate(-c.x, -c.z, c.y);
+ sphere(1);
+}
 
 
 PVector get_latlong_xyz(float latitude, float longitude){
 
- latitude = radians(latitude);
- longitude = radians(longitude);
+  latitude = radians(latitude);
+  longitude = radians(longitude);
 
- PVector coords = new PVector(0, 0, 0);
- coords.x = radius * cos(latitude) * cos(longitude);
- coords.y = radius * cos(latitude) * sin(longitude);
- coords.z = radius * sin(latitude);
+  PVector coords = new PVector(0, 0, 0);
+  coords.x = radius * cos(latitude) * cos(longitude);
+  coords.y = radius * cos(latitude) * sin(longitude);
+  coords.z = radius * sin(latitude);
 
- return coords;
+  return coords;
 }
 
 ArrayList<Element> GetMeteorElements(){
