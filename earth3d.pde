@@ -1,8 +1,5 @@
 PImage earth_texture;
-PImage moon_texture;
-
 PShape earth;
-PShape moon;
 
 float radius = 30;
 
@@ -43,13 +40,34 @@ PVector get_longlat_xyz(float latitude, float longitude){
   
   latitude += 180;
   
+  
   latitude = radians(latitude);
   longitude = radians(longitude);
   
+  
+
   PVector coords = new PVector(0, 0, 0);
   coords.x = radius * cos(latitude) * cos(longitude);
   coords.y = radius * cos(latitude) * sin(longitude);
   coords.z = radius * sin(latitude);
   
+  coords.z = -coords.z;
+  
   return coords;
+}
+
+
+
+
+class Element{
+ public float latitude;
+ public float longitude;
+ public String timestamp;
+ 
+ public Element(float _latitude, float _longitude, String _timestamp){
+   latitude = _latitude; 
+   longitude = _longitude;
+   timestamp = _timestamp;
+ }
+  
 }
