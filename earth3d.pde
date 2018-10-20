@@ -1,8 +1,7 @@
-PImage earth_texture;
-PImage moon_texture;
+import http.requests.*;
 
+PImage earth_texture;
 PShape earth;
-PShape moon;
 
 float radius = 30;
 
@@ -24,6 +23,12 @@ void setup() {
   earth = createShape(SPHERE, radius);
   earth_texture = loadImage("earth_flat_map.jpg");
   earth.setTexture(earth_texture);  
+  
+  ArrayList<Element> elementList = GetMeteorElements();
+  
+  for (int i = 0; i < elementList.size(); i++) {
+    println(elementList.get(i).latitude + "-" + elementList.get(i).latitude + "-" + elementList.get(i).timestamp);
+  }
 }
 
 void draw() {
@@ -43,13 +48,54 @@ PVector get_longlat_xyz(float latitude, float longitude){
   
   latitude += 180;
   
+  
   latitude = radians(latitude);
   longitude = radians(longitude);
   
+  
+
   PVector coords = new PVector(0, 0, 0);
   coords.x = radius * cos(latitude) * cos(longitude);
   coords.y = radius * cos(latitude) * sin(longitude);
   coords.z = radius * sin(latitude);
   
+  coords.z = -coords.z;
+  
   return coords;
+}
+
+ArrayList<Element> GetMeteorElements(){
+  ArrayList<Element> meteorHitArrayList = new ArrayList<Element>();
+  
+  GetRequest getRequest = new GetRequest("https://data.nasa.gov/resource/gh4g-9sfh.json");
+  getRequest.send();
+  JSONArray jsonBlob = JSONArray.parse(getRequest.getContent());
+  
+  for (int i = 0; i < jsonBlob.size(); i++) {
+    JSONObject meteorHit = jsonBlob.getJSONObject(i);
+    JSONObject meteorHitGeoLocation = meteorHit.getJSONObject("geolocation");
+    
+    if(meteorHitGeoLocation != null){
+          meteorHitArrayList.add(new Element(
+            meteorHitGeoLocation.getFloat("latitude"),
+            meteorHitGeoLocation.getFloat("longitude"),
+            meteorHit.getString("year"))
+            );
+    } 
+  }  
+  return meteorHitArrayList;
+}
+
+
+class Element{
+ public float latitude;
+ public float longitude;
+ public String timestamp;
+ 
+ public Element(float _latitude, float _longitude, String _timestamp){
+   latitude = _latitude; 
+   longitude = _longitude;
+   timestamp = _timestamp;
+ }
+  
 }
