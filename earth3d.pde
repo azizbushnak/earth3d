@@ -1,4 +1,8 @@
 import http.requests.*;
+import java.util.Comparator;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.text.ParsePosition;
 
 PImage earth_texture;
 PShape earth;
@@ -21,7 +25,7 @@ void setup() {
   stroke(0);
   strokeWeight(0);
   earth = createShape(SPHERE, radius);
-  earth_texture = loadImage("earth_flat_map.jpg");
+  earth_texture = loadImage("MapCarte342_vansant_large.png");
   earth.setTexture(earth_texture);  
   
   ArrayList<Element> elementList = GetMeteorElements();
@@ -38,30 +42,23 @@ void draw() {
 
   fill(255,0,0);
   shape(earth);
-  PVector c = get_longlat_xyz(0, 0);
-  translate(c.x, c.y, c.z);
+  PVector c = get_latlong_xyz(40.7128, -74.0060);
+  translate(c.x, -c.z, c.y);
   sphere(1);
 } 
 
 
-PVector get_longlat_xyz(float latitude, float longitude){
-  
-  latitude += 180;
-  
-  
-  latitude = radians(latitude);
-  longitude = radians(longitude);
-  
-  
+PVector get_latlong_xyz(float latitude, float longitude){
 
-  PVector coords = new PVector(0, 0, 0);
-  coords.x = radius * cos(latitude) * cos(longitude);
-  coords.y = radius * cos(latitude) * sin(longitude);
-  coords.z = radius * sin(latitude);
-  
-  coords.z = -coords.z;
-  
-  return coords;
+ latitude = radians(latitude);
+ longitude = radians(longitude);
+
+ PVector coords = new PVector(0, 0, 0);
+ coords.x = radius * cos(latitude) * cos(longitude);
+ coords.y = radius * cos(latitude) * sin(longitude);
+ coords.z = radius * sin(latitude);
+
+ return coords;
 }
 
 ArrayList<Element> GetMeteorElements(){
@@ -83,18 +80,30 @@ ArrayList<Element> GetMeteorElements(){
             );
     } 
   }  
+  
+  meteorHitArrayList.sort(new ElementComparator());
+  
   return meteorHitArrayList;
 }
 
 class Element{
  public float latitude;
  public float longitude;
- public String timestamp;
+ public Date timestamp;
  
  public Element(float _latitude, float _longitude, String _timestamp){
+   SimpleDateFormat df = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
+   
    latitude = _latitude; 
    longitude = _longitude;
-   timestamp = _timestamp;
+   timestamp = df.parse(_timestamp,new ParsePosition(0));
  }
   
+}
+
+public class ElementComparator implements Comparator<Element> {
+  @Override
+ public int compare(Element o1, Element o2) {      
+    return o1.timestamp.compareTo(o2.timestamp);
+  }
 }
