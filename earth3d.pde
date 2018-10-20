@@ -86,7 +86,6 @@ ArrayList<Element> GetMeteorElements(){
   return meteorHitArrayList;
 }
 
-
 class Element{
  public float latitude;
  public float longitude;
