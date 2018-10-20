@@ -1,0 +1,44 @@
+
+import peasy.*;
+
+PeasyCam cam;
+
+void setup() {
+  size(800,800,P3D);
+  cam = new PeasyCam(this, 100);
+  cam.setMinimumDistance(35);
+  cam.setMaximumDistance(300);
+  
+  float cameraZ = ((height/2.0) / tan(PI*60.0/360.0));
+  perspective(PI/3.0, width/height, cameraZ/3000.0, cameraZ*10.0); // the third value messes up after some changes and the perspective resets to default; just edit the value slightly, run the code and change it back the next time you run the program and it'll fix itself
+
+  stroke(0);
+  strokeWeight(0);
+  earth = createShape(SPHERE, 30);
+  earth_texture = loadImage("8k_earth.jpg");
+  earth.setTexture(earth_texture);
+  moon = createShape(SPHERE, 15);
+  moon_texture = loadImage("8k_moon.jpg");
+  moon.setTexture(moon_texture);
+  skybox = createShape(SPHERE, 2000);
+  skybox_texture = loadImage("skybox.jpg");
+  skybox.setTexture(skybox_texture);  
+}
+
+void draw() {
+  background(0);
+  rotateX(-.5);
+  rotateY(-.5);
+  
+  box(0.2, 85, 0.2);
+
+  fill(255,0,0);
+  shape(earth);
+  shape(skybox);
+  pushMatrix();
+  // translate(1279.917658, 1279.917658); // the to-scale moon distance, perfectly worked out n'all
+  translate(100, 100);   // slightly more accessible moon dist.
+  shape(moon);
+  popMatrix();
+
+}
