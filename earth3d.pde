@@ -38,30 +38,23 @@ void draw() {
 
   fill(255,0,0);
   shape(earth);
-  PVector c = get_longlat_xyz(0, 0);
-  translate(c.x, c.y, c.z);
+  PVector c = get_latlong_xyz(40.7128, -74.0060);
+  translate(c.x, -c.z, c.y);
   sphere(1);
 } 
 
 
-PVector get_longlat_xyz(float latitude, float longitude){
-  
-  latitude += 180;
-  
-  
-  latitude = radians(latitude);
-  longitude = radians(longitude);
-  
-  
+PVector get_latlong_xyz(float latitude, float longitude){
 
-  PVector coords = new PVector(0, 0, 0);
-  coords.x = radius * cos(latitude) * cos(longitude);
-  coords.y = radius * cos(latitude) * sin(longitude);
-  coords.z = radius * sin(latitude);
-  
-  coords.z = -coords.z;
-  
-  return coords;
+ latitude = radians(latitude);
+ longitude = radians(longitude);
+
+ PVector coords = new PVector(0, 0, 0);
+ coords.x = radius * cos(latitude) * cos(longitude);
+ coords.y = radius * cos(latitude) * sin(longitude);
+ coords.z = radius * sin(latitude);
+
+ return coords;
 }
 
 ArrayList<Element> GetMeteorElements(){
