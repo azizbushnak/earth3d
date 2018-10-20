@@ -25,7 +25,7 @@ void setup() {
   stroke(0);
   strokeWeight(0);
   earth = createShape(SPHERE, radius);
-  earth_texture = loadImage("MapCarte342_vansant_large.png");
+  earth_texture = loadImage("earth_flat_map.jpg");
   earth.setTexture(earth_texture);  
   
   ArrayList<Element> elementList = GetMeteorElements();
