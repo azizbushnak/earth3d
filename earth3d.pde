@@ -18,7 +18,7 @@ PeasyCam cam;
 
 void setup() {
   //  frameRate(10);
-  size(900, 900, P3D);
+  size(600, 600, P3D);
   cam = new PeasyCam(this, 100);
   cam.setMinimumDistance(25);
   cam.setMaximumDistance(300);
@@ -44,8 +44,15 @@ void setup() {
 
 void draw() {
   background(0);
-
+  
+  fill(0, 255, 0);
   box(0.2, 85, 0.2);
+  
+  fill(255, 0, 0);
+  box(0.2, 0.2, 85);
+ 
+  fill(0, 0, 255);
+  box(85, 0.2, 0.2);
 
   fill(255, 0, 0);
   shape(earth);
