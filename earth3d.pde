@@ -1,4 +1,8 @@
 import http.requests.*;
+import java.util.Comparator;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.text.ParsePosition;
 
 PImage earth_texture;
 PShape earth;
@@ -76,18 +80,30 @@ ArrayList<Element> GetMeteorElements(){
             );
     } 
   }  
+  
+  meteorHitArrayList.sort(new ElementComparator());
+  
   return meteorHitArrayList;
 }
 
 class Element{
  public float latitude;
  public float longitude;
- public String timestamp;
+ public Date timestamp;
  
  public Element(float _latitude, float _longitude, String _timestamp){
+   SimpleDateFormat df = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
+   
    latitude = _latitude; 
    longitude = _longitude;
-   timestamp = _timestamp;
+   timestamp = df.parse(_timestamp,new ParsePosition(0));
  }
   
+}
+
+public class ElementComparator implements Comparator<Element> {
+  @Override
+ public int compare(Element o1, Element o2) {      
+    return o1.timestamp.compareTo(o2.timestamp);
+  }
 }
