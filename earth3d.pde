@@ -6,7 +6,13 @@ import java.text.ParsePosition;
 import java.lang.Math;
 
 PImage earth_texture;
+PImage skybox_texture;
+PImage moon_texture;
+
 PShape earth;
+PShape skybox;
+PShape moon;
+
 PVector[] strikeCoords;
 float[] strikeImpact;
 int numMeteorites;
@@ -40,6 +46,13 @@ void setup() {
   earth = createShape(SPHERE, radius);
   earth_texture = loadImage("Albedo.jpg");
   earth.setTexture(earth_texture);  
+  
+  skybox = createShape (SPHERE, 4000);
+  skybox_texture = loadImage("starmap_8k.jpg");
+  skybox.setTexture(skybox_texture);
+  moon = createShape(SPHERE, radius/2);
+  moon_texture = loadImage("8k_moon.jpg");
+  moon.setTexture(moon_texture);
 
   ArrayList<Element> elementList = GetMeteorElements();
 }
@@ -75,6 +88,11 @@ void draw() {
   
     fill(255, 0, 0);
     shape(earth);
+    shape(skybox);
+    pushMatrix();
+    translate(200, 200);
+    shape(moon);
+    popMatrix();
   } else {
     /*if(drawIndex < strikeCoords.length){
       for (int i = 0; i <= drawIndex - 1; i++) {
