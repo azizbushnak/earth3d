@@ -76,37 +76,18 @@ void draw() {
     fill(255, 0, 0);
     shape(earth);
   } else {
-    /*if(drawIndex < strikeCoords.length){
-      for (int i = 0; i <= drawIndex - 1; i++) {
-          pushMatrix();
-          translate(-strikeCoords[i].x, -strikeCoords[i].z, strikeCoords[i].y);
-          sphere(log(strikeImpact[i]));
-          popMatrix();
-        drawIndex++;
-      } */
       for (int i = 0; i < strikeCoords.length; i++) {
         if(strikeCoords[i] != null){
           pushMatrix();
+          float impactSize = (log(strikeImpact[i]) / 10);          
+          color c = getColourFunction(impactSize);  
+          fill(c);          
           translate(-strikeCoords[i].x, -strikeCoords[i].z, strikeCoords[i].y);
-          sphere(log(strikeImpact[i]) / 10);
+          sphere(impactSize);
           popMatrix();         
         }
       }
     }  
-  
-  /*background(0);
-
-  box(0.2, 85, 0.2);
-
-  fill(255, 0, 0);
-  shape(earth);
-
-  meteorNum = int(frameCount/60) % numMeteorites;
-
-  pushMatrix();
-  translate(-strikeCoords[meteorNum].x, -strikeCoords[meteorNum].z, strikeCoords[meteorNum].y);
-  sphere(log(strikeImpact[meteorNum]));
-  popMatrix(); */
 } 
 
 
@@ -163,6 +144,21 @@ ArrayList<Element> GetMeteorElements() {
   meteorHitArrayList.sort(new ElementComparator());
 
   return meteorHitArrayList;
+}
+
+
+color getColourFunction(float impactSize){
+  float impactSizeAbs = abs(impactSize);
+  if(impactSizeAbs < 0.2f){
+    return #ff0000;
+  }
+  if(impactSizeAbs < 0.35f){
+    return #ff8000;
+  }
+  if(impactSizeAbs < 0.5f){
+    return #ffff00 ;
+  }
+  return  #ffffff;  
 }
 
 class Element {
