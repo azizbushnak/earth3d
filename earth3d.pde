@@ -15,14 +15,21 @@ float radius = 30;
 
 import peasy.*;
 
+float[] lastPosition = new float[3];
+boolean drawMeteorites = false;
+float drawIndex = 0;
+
 PeasyCam cam;
 
 void setup() {
   //  frameRate(10);
-  size(900, 900, P3D);
+  size(600, 600, P3D);
+  background(0);
   cam = new PeasyCam(this, 100);
   cam.setMinimumDistance(25);
   cam.setMaximumDistance(300);
+
+  lastPosition = new float[] {0, 0, 0}; 
 
   float cameraZ = ((height/2.0) / tan(PI*60.0/360.0));
   perspective(PI/3.0, width/height, cameraZ/3000.0, cameraZ*10.0);
@@ -37,27 +44,58 @@ void setup() {
 }
 
 void draw() {
-  background(0);
-
-  box(0.2, 85, 0.2);
-
-  fill(255, 0, 0);
-  shape(earth);
-  //  PVector c = get_latlong_xyz(40.7128, -74.0060); // New York
-  //  PVector c = get_latlong_xyz(50.7184, -3.5339); // Exeter
-  //  PVector c = get_latlong_xyz(0, 0); // Greenwich, Equator
-  //  PVector c = get_latlong_xyz(0, 90); // ~Singapore
-  //  PVector c = get_latlong_xyz(90, 0); // N Pole
-  //  PVector c = get_latlong_xyz(-90, 0); // S Pole
-  //  translate(-c.x, -c.z, c.y);
-  //  sphere(1);
+  
+  float[] currentPos = cam.getPosition();
+  
+  if(currentPos[0] == lastPosition[0] && currentPos[1] == lastPosition[1] && currentPos[2] == lastPosition[2]){
+      drawMeteorites = true;
+        
+  } else {
+    drawMeteorites = false; 
+  }
 
   meteorNum = int(frameCount/60) % numMeteorites;
+  lastPosition = cam.getPosition();
+  
+  
+  if(!drawMeteorites){
+    
+    background(0);
+    drawIndex = 0;
+    fill(0, 255, 0);
+    box(0.2, 85, 0.2);
+    
+    fill(255, 0, 0);
+    box(0.2, 0.2, 85);
+   
+    fill(0, 0, 255);
+    box(85, 0.2, 0.2);
+  
+    fill(255, 0, 0);
+    shape(earth);
+    
+  } else {
+    if(drawIndex < strikeCoords.length){
+      for (int i = 0; i <= drawIndex - 1; i++) {
+        translate(strikeCoords[i].x, strikeCoords[i].y, strikeCoords[i].z);
+        sphere(1);
+        drawIndex++;
+      } 
+    }
+    
+  }
+  
+  
+  //background(0);
 
+  /*
+  meteorNum = int(frameCount/60) % numMeteorites;
+  
   pushMatrix();
   translate(-strikeCoords[meteorNum].x, -strikeCoords[meteorNum].z, strikeCoords[meteorNum].y);
   sphere(strikeImpact[meteorNum]);
   popMatrix();
+  */
 } 
 
 
