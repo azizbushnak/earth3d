@@ -3,6 +3,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.text.ParsePosition;
+import java.lang.Math;
 
 PImage earth_texture;
 PShape earth;
@@ -44,11 +45,12 @@ void setup() {
 }
 
 void draw() {
-  
+   
   float[] currentPos = cam.getPosition();
   
   if(currentPos[0] == lastPosition[0] && currentPos[1] == lastPosition[1] && currentPos[2] == lastPosition[2]){
       drawMeteorites = true;
+      
         
   } else {
     drawMeteorites = false; 
@@ -58,7 +60,7 @@ void draw() {
   lastPosition = cam.getPosition();
   
   
-  if(!drawMeteorites){
+ if(!drawMeteorites){
     
     background(0);
     drawIndex = 0;
@@ -73,29 +75,38 @@ void draw() {
   
     fill(255, 0, 0);
     shape(earth);
-    
   } else {
-    if(drawIndex < strikeCoords.length){
+    /*if(drawIndex < strikeCoords.length){
       for (int i = 0; i <= drawIndex - 1; i++) {
-        translate(strikeCoords[i].x, strikeCoords[i].y, strikeCoords[i].z);
-        sphere(1);
+          pushMatrix();
+          translate(-strikeCoords[i].x, -strikeCoords[i].z, strikeCoords[i].y);
+          sphere(log(strikeImpact[i]));
+          popMatrix();
         drawIndex++;
-      } 
-    }
-    
-  }
+      } */
+      for (int i = 0; i < strikeCoords.length; i++) {
+        if(strikeCoords[i] != null){
+          pushMatrix();
+          translate(-strikeCoords[i].x, -strikeCoords[i].z, strikeCoords[i].y);
+          sphere(log(strikeImpact[i]) / 10);
+          popMatrix();         
+        }
+      }
+    }  
   
-  
-  //background(0);
+  /*background(0);
 
-  /*
+  box(0.2, 85, 0.2);
+
+  fill(255, 0, 0);
+  shape(earth);
+
   meteorNum = int(frameCount/60) % numMeteorites;
-  
+
   pushMatrix();
   translate(-strikeCoords[meteorNum].x, -strikeCoords[meteorNum].z, strikeCoords[meteorNum].y);
-  sphere(strikeImpact[meteorNum]);
-  popMatrix();
-  */
+  sphere(log(strikeImpact[meteorNum]));
+  popMatrix(); */
 } 
 
 
@@ -129,9 +140,8 @@ ArrayList<Element> GetMeteorElements() {
     JSONObject meteorHitGeoLocation = meteorHit.getJSONObject("geolocation");
     String meteorMass = meteorHit.getString("mass");
 
-
     if (meteorHitGeoLocation != null) {
-      if (meteorMass != null) {
+      if (meteorMass != null && meteorMass != "") {
         meteorImpact = float(meteorMass)/10000.0;
       } else {
         meteorImpact = 1.0;
@@ -142,10 +152,10 @@ ArrayList<Element> GetMeteorElements() {
         meteorHit.getString("year"), 
         meteorImpact)
         );
-      strikeCoords[i] = get_latlong_xyz(meteorHitGeoLocation.getFloat("latitude"), meteorHitGeoLocation.getFloat("longitude"));
-      strikeImpact[i] = meteorImpact;
-      if (i<10) {
-        println(i + " - " + strikeImpact[i] + " - " + meteorHitGeoLocation.getFloat("latitude") + " - " + meteorHitGeoLocation.getFloat("longitude") + " - " + meteorHit.getString("year"));
+        
+      if(i < meteorHitArrayList.size()){
+        strikeCoords[i] = get_latlong_xyz(meteorHitArrayList.get(i).latitude, meteorHitArrayList.get(i).longitude);
+        strikeImpact[i] = meteorHitArrayList.get(i).mass;
       }
     }
   }  
